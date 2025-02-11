@@ -1,11 +1,14 @@
+// 題目資料結構
 export const questions = {
   javascript: {
     categories: [
+      // 分類列表
       {
         name: '1. 基礎概念',
         questions: [
+          // 題目列表
           {
-            title: '1.1 變量聲明',
+            title: '1.1 變量聲明', // 題目標題
             question: '請解釋 var、let、const 之間的區別是什麼？',
             answer: `var: 
 - 宣告的變數具有函式作用域或全域作用域

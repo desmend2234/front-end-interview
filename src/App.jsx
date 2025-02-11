@@ -3,30 +3,31 @@ import { questions } from '../dummy';
 import QuestionSection from './components/QuestionSection';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('javascript');
-  const [activeCategory, setActiveCategory] = useState(0);
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const contentRef = useRef(null);
+  // 狀態管理
+  const [activeTab, setActiveTab] = useState('javascript'); // 當前選中的標籤（JS/React/CSS）
+  const [activeCategory, setActiveCategory] = useState(0); // 當前選中的分類索引
+  const [selectedQuestion, setSelectedQuestion] = useState(null); // 當前選中的題目
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // 移動端選單狀態
+  const contentRef = useRef(null); // 用於滾動到內容區域
 
+  // 定義頂部標籤
   const tabs = [
     { id: 'javascript', label: 'JavaScript' },
     { id: 'react', label: 'React' },
     { id: 'css', label: 'CSS' },
   ];
 
+  // 獲取當前標籤的分類和題目
   const currentCategories = questions[activeTab].categories;
   const currentQuestions = currentCategories[activeCategory].questions;
 
+  // 處理題目點擊事件
   const handleQuestionClick = (index) => {
     setSelectedQuestion(index);
-    // 在移動設備上滾動到內容區
+    // 移動端自動滾動到內容區
     if (window.innerWidth < 1024) {
       setTimeout(() => {
-        contentRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
+        contentRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
   };
@@ -34,12 +35,13 @@ function App() {
   return (
     <div className='min-h-screen bg-gradient-page'>
       <div className='max-w-6xl mx-auto p-4 md:p-6 lg:p-8'>
-        {/* Hamburger Menu - 只在移動端顯示 */}
+        {/* 漢堡選單 - 移動端顯示 */}
         <div className='lg:hidden fixed top-4 right-4 z-50'>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className='p-2 rounded-lg bg-white shadow-md'
           >
+            {/* 漢堡選單的三條線 */}
             <div
               className={`w-6 h-0.5 bg-gray-600 transition-all ${
                 isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
@@ -58,16 +60,19 @@ function App() {
           </button>
         </div>
 
+        {/* 頁面標題 */}
         <h1 className='text-2xl md:text-3xl font-bold mb-6 md:mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent'>
           前端面試題目練習
         </h1>
 
-        {/* 主題選擇 */}
+        {/* 側邊選單 - 移動端時固定位置 */}
         <div
-          className={`fixed inset-0 lg:relative lg:inset-auto bg-white/95 lg:bg-transparent transform transition-transform lg:transform-none ${
+          className={`fixed inset-0 lg:relative lg:inset-auto bg-white/95 lg:bg-transparent 
+          transform transition-transform lg:transform-none ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
           } lg:translate-x-0 z-40`}
         >
+          {/* 主題標籤列表 */}
           <div className='flex flex-col lg:flex-row gap-2 md:gap-4 p-4 lg:p-0 mb-6 md:mb-8 border-b border-gray-200/50 pb-4'>
             {tabs.map((tab) => (
               <button
@@ -89,7 +94,7 @@ function App() {
             ))}
           </div>
 
-          {/* 分類選擇 */}
+          {/* 分類按鈕列表 */}
           <div className='flex flex-wrap gap-2 mb-6 p-4 lg:p-0'>
             {currentCategories.map((category, index) => (
               <button
@@ -111,12 +116,14 @@ function App() {
           </div>
         </div>
 
+        {/* 主要內容區域 */}
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-          {/* 題目列表 */}
+          {/* 左側題目列表 */}
           <div className='lg:col-span-1 space-y-2'>
             <h2 className='text-xl font-bold text-gray-800 mb-4'>
               {currentCategories[activeCategory].name}
             </h2>
+            {/* 可滾動的題目列表 */}
             <div className='space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto pr-2'>
               {currentQuestions.map((question, index) => (
                 <button
@@ -143,7 +150,7 @@ function App() {
             </div>
           </div>
 
-          {/* 題目內容 */}
+          {/* 右側題目內容 */}
           <div ref={contentRef} className='lg:col-span-2'>
             {selectedQuestion !== null ? (
               <div className='animate-fadeIn'>
